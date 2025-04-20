@@ -17,6 +17,7 @@
 
 #include <driver/rtc_io.h>
 #include <esp_sleep.h>
+#include "system_info.h"
 
 #define TAG "XINGZHI_CUBE_1_54TFT_DUAL"
 
@@ -113,8 +114,11 @@ private:
 
         volume_up_button_.OnLongPress([this]() {
             power_save_timer_->WakeUp();
-            GetAudioCodec()->SetOutputVolume(100);
-            GetDisplay()->ShowNotification(Lang::Strings::MAX_VOLUME);
+            // GetAudioCodec()->SetOutputVolume(100);
+            // GetDisplay()->ShowNotification(Lang::Strings::MAX_VOLUME);
+            SystemInfo::IncreaseMacIndex();
+            auto& app = Application::GetInstance();
+            app.Reboot();
         });
 
         volume_down_button_.OnClick([this]() {
@@ -130,8 +134,11 @@ private:
 
         volume_down_button_.OnLongPress([this]() {
             power_save_timer_->WakeUp();
-            GetAudioCodec()->SetOutputVolume(0);
-            GetDisplay()->ShowNotification(Lang::Strings::MUTED);
+            // GetAudioCodec()->SetOutputVolume(0);
+            // GetDisplay()->ShowNotification(Lang::Strings::MUTED);
+            SystemInfo::DecreaseMacIndex();
+            auto& app = Application::GetInstance();
+            app.Reboot();
         });
     }
 

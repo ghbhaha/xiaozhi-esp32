@@ -61,7 +61,7 @@ Http* Ota::SetupHttp() {
 
     http->SetHeader("Activation-Version", has_serial_number_ ? "2" : "1");
     http->SetHeader("Device-Id", SystemInfo::GetMacAddress().c_str());
-    http->SetHeader("Client-Id", board.GetUuid());
+    http->SetHeader("Client-Id", SystemInfo::GetUuid().c_str());
     http->SetHeader("User-Agent", std::string(BOARD_NAME "/") + app_desc->version);
     http->SetHeader("Accept-Language", Lang::CODE);
     http->SetHeader("Content-Type", "application/json");

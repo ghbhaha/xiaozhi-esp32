@@ -8,8 +8,9 @@
 #include "assets/lang_config.h"
 #include <cstring>
 #include "settings.h"
-
+#include "system_info.h"
 #include "board.h"
+
 
 #define TAG "LcdDisplay"
 
@@ -560,7 +561,19 @@ void LcdDisplay::SetupUI() {
     lv_obj_set_style_radius(status_bar_, 0, 0);
     lv_obj_set_style_bg_color(status_bar_, current_theme.background, 0);
     lv_obj_set_style_text_color(status_bar_, current_theme.text, 0);
-    
+
+
+    //插入text显示mac地址
+    agent_label_ = lv_label_create(container_);
+    lv_label_set_text(agent_label_, SystemInfo::GetAgentName().c_str());
+    lv_obj_set_style_text_font(agent_label_, fonts_.text_font, 0);
+    lv_obj_set_style_text_color(agent_label_, current_theme.text, 0);
+    lv_obj_set_width(agent_label_, LV_HOR_RES);
+    lv_obj_set_style_text_align(agent_label_, LV_TEXT_ALIGN_CENTER, 0);
+    lv_obj_set_style_pad_top(agent_label_, 5, 0);
+    lv_obj_set_style_pad_bottom(agent_label_, 5, 0);
+
+
     /* Content */
     content_ = lv_obj_create(container_);
     lv_obj_set_scrollbar_mode(content_, LV_SCROLLBAR_MODE_OFF);
@@ -718,6 +731,10 @@ void LcdDisplay::SetTheme(const std::string& theme_name) {
     if (container_ != nullptr) {
         lv_obj_set_style_bg_color(container_, current_theme.background, 0);
         lv_obj_set_style_border_color(container_, current_theme.border, 0);
+    }
+
+    if (agent_label_ != nullptr) {
+        lv_obj_set_style_text_color(agent_label_, current_theme.text, 0);
     }
     
     // Update status bar colors

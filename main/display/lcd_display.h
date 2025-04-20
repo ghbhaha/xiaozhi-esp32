@@ -19,6 +19,7 @@ protected:
     lv_obj_t* content_ = nullptr;
     lv_obj_t* container_ = nullptr;
     lv_obj_t* side_bar_ = nullptr;
+    lv_obj_t* agent_label_ = nullptr;
 
     DisplayFonts fonts_;
 

@@ -8,6 +8,7 @@
 #include <esp_partition.h>
 #include <esp_app_desc.h>
 #include <esp_ota_ops.h>
+#include "settings.h"
 
 
 #define TAG "SystemInfo"
@@ -29,12 +30,61 @@ size_t SystemInfo::GetFreeHeapSize() {
     return esp_get_free_heap_size();
 }
 
+
+void SystemInfo::DecreaseMacIndex() {
+    Settings settings("macuuid", true);
+    int mac_index = settings.GetInt("mac_index", 0);
+    const char* mac_addresses[] = MAC_ADDRESSES;
+    int mac_addresses_size = sizeof(mac_addresses) / sizeof(mac_addresses[0]);
+    mac_index = mac_index % mac_addresses_size;
+    if (mac_index == 0) {
+        mac_index = mac_addresses_size - 1;
+    } else {
+        mac_index--;
+    }
+    settings.SetInt("mac_index", mac_index);
+}
+
+void SystemInfo::IncreaseMacIndex() {
+    Settings settings("macuuid", true);
+    int mac_index = settings.GetInt("mac_index", 0);
+    const char* mac_addresses[] = MAC_ADDRESSES;
+    int mac_addresses_size = sizeof(mac_addresses) / sizeof(mac_addresses[0]);
+    mac_index = mac_index % mac_addresses_size;
+    if (mac_index == mac_addresses_size - 1) {
+        mac_index = 0;
+    } else {
+        mac_index++;
+    }
+    settings.SetInt("mac_index", mac_index);
+}
+
+
 std::string SystemInfo::GetMacAddress() {
-    uint8_t mac[6];
-    esp_read_mac(mac, ESP_MAC_WIFI_STA);
-    char mac_str[18];
-    snprintf(mac_str, sizeof(mac_str), "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    return std::string(mac_str);
+    const char* mac_addresses[] = MAC_ADDRESSES;
+    Settings settings("macuuid", true);
+    int mac_addresses_size = sizeof(mac_addresses) / sizeof(mac_addresses[0]);
+    int mac_index = settings.GetInt("mac_index", 0);
+    mac_index = mac_index % mac_addresses_size;
+    return std::string(mac_addresses[mac_index]);
+}
+
+std::string SystemInfo::GetUuid() {
+    const char* uuid_addresses[] = UUID_ADDRESSES;
+    Settings settings("macuuid", true);
+    int uuid_addresses_size = sizeof(uuid_addresses) / sizeof(uuid_addresses[0]);
+    int mac_index = settings.GetInt("mac_index", 0);
+    mac_index = mac_index % uuid_addresses_size;
+    return std::string(uuid_addresses[mac_index]);
+}
+
+std::string SystemInfo::GetAgentName() {
+    const char* agent_names[] = AGENT_NAMES;
+    Settings settings("macuuid", true);
+    int agent_names_size = sizeof(agent_names) / sizeof(agent_names[0]);
+    int mac_index = settings.GetInt("mac_index", 0);
+    mac_index = mac_index % agent_names_size;
+    return std::string(agent_names[mac_index]);
 }
 
 std::string SystemInfo::GetChipModelName() {
