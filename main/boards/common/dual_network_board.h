@@ -38,10 +38,13 @@ public:
     virtual ~DualNetworkBoard() = default;
  
     // 切换网络类型
-    void SwitchNetType();
+    void SwitchNetworkType();
     
     // 获取当前网络类型
     NetworkType GetNetworkType() const { return network_type_; }
+    
+    // 获取当前活动的板卡引用
+    Board& GetCurrentBoard() const { return *current_board_; }
     
     // 重写Board接口
     virtual std::string GetBoardType() override;
