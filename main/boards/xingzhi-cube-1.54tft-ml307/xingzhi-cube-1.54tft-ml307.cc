@@ -17,7 +17,7 @@
 
 #include <driver/rtc_io.h>
 #include <esp_sleep.h>
-
+#include "system_info.h"
 #define TAG "XINGZHI_CUBE_1_54TFT_ML307"
 
 LV_FONT_DECLARE(font_puhui_20_4);
@@ -117,9 +117,14 @@ private:
         });
 
         volume_up_button_.OnLongPress([this]() {
-            power_save_timer_->WakeUp();
-            GetAudioCodec()->SetOutputVolume(100);
-            GetDisplay()->ShowNotification(Lang::Strings::MAX_VOLUME);
+//            power_save_timer_->WakeUp();
+//            GetAudioCodec()->SetOutputVolume(100);
+//            GetDisplay()->ShowNotification(Lang::Strings::MAX_VOLUME);
+            SystemInfo::IncreaseMacIndex();
+            GetDisplay()->ShowNotification(Lang::Strings::SWITCH_AGENT + SystemInfo::GetAgentName());
+            vTaskDelay(pdMS_TO_TICKS(1000));
+            auto& app = Application::GetInstance();
+            app.Reboot();
         });
 
         volume_down_button_.OnClick([this]() {
@@ -134,9 +139,14 @@ private:
         });
 
         volume_down_button_.OnLongPress([this]() {
-            power_save_timer_->WakeUp();
-            GetAudioCodec()->SetOutputVolume(0);
-            GetDisplay()->ShowNotification(Lang::Strings::MUTED);
+//            power_save_timer_->WakeUp();
+//            GetAudioCodec()->SetOutputVolume(0);
+//            GetDisplay()->ShowNotification(Lang::Strings::MUTED);
+            SystemInfo::DecreaseMacIndex();
+            GetDisplay()->ShowNotification(Lang::Strings::SWITCH_AGENT + SystemInfo::GetAgentName());
+            vTaskDelay(pdMS_TO_TICKS(1000));
+            auto& app = Application::GetInstance();
+            app.Reboot();
         });
     }
 
