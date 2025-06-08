@@ -47,7 +47,9 @@ public:
     static std::string GetUuid();
     static std::string GetAgentName();
     static std::string GetChipModelName();
-    static esp_err_t PrintRealTimeStats(TickType_t xTicksToWait);
+    static esp_err_t PrintTaskCpuUsage(TickType_t xTicksToWait);
+    static void PrintTaskList();
+    static void PrintHeapStats();
 };
 
 #endif // _SYSTEM_INFO_H_
